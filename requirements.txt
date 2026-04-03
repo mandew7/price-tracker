@@ -5,3 +5,7 @@ pydantic-settings==2.2.1
 sqlalchemy==2.0.28
 asyncpg==0.29.0
 alembic==1.13.1
+httpx
+beautifulsoup4
+playwright==1.58.0
+playwright-stealth
