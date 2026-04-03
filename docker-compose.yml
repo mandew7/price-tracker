@@ -20,8 +20,8 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=price_tracker
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=postgres
     ports:
       - "5432:5432"
 

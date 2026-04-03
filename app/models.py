@@ -1,15 +1,31 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime
-from sqlalchemy.sql import func
-from .database import Base
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, JSON
+from sqlalchemy.orm import relationship, declarative_base
+from datetime import datetime
+
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    tg_id = Column(String, unique=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 class Product(Base):
     __tablename__ = "products"
-
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    url = Column(String, unique=True, index=True)
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    url = Column(String, unique=True, nullable=False)
     current_price = Column(Float)
-    last_price = Column(Float, nullable=True)
-    currency = Column(String, default="RUB")
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    category = Column(String)  # Для сравнения
+    attributes = Column(JSON)  # Для хранения характеристик (вес, бренд и т.д.)
+    
+    history = relationship("PriceHistory", back_populates="product")
+
+class PriceHistory(Base):
+    __tablename__ = "price_history"
+    id = Column(Integer, primary_key=True)
+    product_id = Column(Integer, ForeignKey("products.id"))
+    price = Column(Float, nullable=False)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    
+    product = relationship("Product", back_populates="history")
